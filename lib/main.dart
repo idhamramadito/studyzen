@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'jadwal.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,13 +10,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          primaryColor: Color(0xff008AD5), //Colors.blue[600],
+          primarySwatch: Colors.blueGrey,
+          primaryColor: Colors.blueGrey,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
       home: MyHomePage(),
       routes: <String, WidgetBuilder> {
-        '/secondpage' : (context) => SecondPage()
+        '/jadwalpage' : (context) => JadwalPage()
       },
     );
   }
@@ -33,9 +33,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;  
   static const List<Widget> _widgetOptions = <Widget>[  
-    Text('Home Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),  
-    Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),  
-    Text('Profile Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),  
+    Icon(Icons.search, size: 100),  
+    Icon(Icons.home, size: 100),    
+    Icon(Icons.person, size: 100),    
   ];  
   
   void _onItemTapped(int index) {  
@@ -47,11 +47,44 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blueGrey,
+              ),
+              child: Text('StudyZen',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 20,
+                color: Colors.white),
+              ),
             ),
+            ListTile(
+              title: const Text('Tugas'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Settings'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
         title: Text('Profile'),
         actions: [
           Padding(
@@ -60,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.calendar_today),
             onPressed: () {
-              Navigator.of(context).pushNamed('/secondpage');
+              Navigator.of(context).pushNamed('/jadwalpage');
             },
             ),
         ],
@@ -72,18 +105,15 @@ class _MyHomePageState extends State<MyHomePage> {
         items: const <BottomNavigationBarItem>[  
           BottomNavigationBarItem(  
             icon: Icon(Icons.search),  
-            title: Text('Search'),  
-            backgroundColor: Colors.green  
+            title: Text('Search'),
           ),  
           BottomNavigationBarItem(  
             icon: Icon(Icons.home),  
-            title: Text('Home'),  
-            backgroundColor: Colors.yellow  
+            title: Text('Home'),
           ),  
           BottomNavigationBarItem(  
             icon: Icon(Icons.person),  
-            title: Text('Profile'),  
-            backgroundColor: Colors.blue,  
+            title: Text('Profile'), 
           ),  
         ],  
         currentIndex: _selectedIndex,  
@@ -92,69 +122,5 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _onItemTapped,
       ),  
     );
-  }
-}
-
- class SecondPage extends StatelessWidget {
-   @override
-   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Jadwal'),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-            ),
-        ],
-      ),
-        body: SfCalendar(
-        view: CalendarView.month,
-      showNavigationArrow: true,
-      selectionDecoration: BoxDecoration(
-        color: Colors.transparent,
-            border: Border.all(color: Colors.red, width: 2),
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            shape: BoxShape.rectangle,
-      ),
-      monthViewSettings: MonthViewSettings(showAgenda: true),
-      firstDayOfWeek: 1,
-      //initialDisplayDate: DateTime(2021, 03, 01, 08, 30),
-      //initialSelectedDate: DateTime(2021, 03, 01, 08, 30),
-      dataSource: ScheduleDataSource(getAppointments()),
-      ),
-    );
-  }
- }
-
- 
-List<Appointment> getAppointments() {
-  List<Appointment> meetings = <Appointment>[];
-  final DateTime today = DateTime.now();
-  final DateTime startTime =
-      DateTime(today.year, today.month, today.day, 9, 0, 0);
-  final DateTime endTime = startTime.add(const Duration(hours: 2));
-
-  meetings.add(Appointment(
-      startTime: startTime,
-      endTime: endTime,
-      subject: 'Class',
-      color: Colors.yellow[900],
-      recurrenceRule: 'FREQ=DAILY;COUNT=10',
-      isAllDay: false));
-
-  return meetings;
-}
-
-class ScheduleDataSource extends CalendarDataSource {
-  ScheduleDataSource(List<Appointment> source) {
-    appointments = source;
   }
 }
