@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                 color: Colors.blueGrey,
               ),
-              child: Text('StudyZen',
+              child: Text('StudyZen', textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 20,
